@@ -1,0 +1,11 @@
+let name: string = "Ugo"
+let age: int = 19
+let year: int = 2025
+let x: int = 5
+let y: int = 7
+
+print "Hello, " + name
+print "You are " + age
+print "But next year you'll be " + (age + 1)
+print "It is currently " + year
+print "Sum: " + (x + y)
