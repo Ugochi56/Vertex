@@ -15,15 +15,27 @@ Whether you’re building high-performance applications, experimenting with AI, 
 - **Modern Toolchain** – comes with its own package manager and build system.  
 
 ## 📦 Installation (coming soon)  
+for linux
 ```bash
 # Clone the repo
 git clone https://github.com/Ugochi56/Vertex.git
 cd Vertex
+```
+
+for windows
+```cmd
+git clone https://github.com/Ugochi56/Vertex.git
+cd C:\User\Username\filelocation\Vertex
+```
 
 🖥️ Hello World Example
 
 let name: string = "Vertex"
 print "Hello world, I am " + name
+
+**To run a code**:
+python vertexc.py test/hello.vx -o out/hello.py : for compilation
+python out/hello.py : run
 
 🧪 Current Status
  Lexer
