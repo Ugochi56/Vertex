@@ -29,9 +29,10 @@ cd C:\User\Username\filelocation\Vertex
 ```
 
 🖥️ Hello World Example
-
+```
 let name: string = "Vertex"
 print "Hello world, I am " + name
+```
 
 **To run a code**:
 python vertexc.py test/hello.vx -o out/hello.py : for compilation
