@@ -41,17 +41,19 @@ python out/hello.py : run
 ```
 
 🧪 Current Status
- Lexer
+✅ Lexer
 
- Parser
+✅ Parser
 
- Basic Compiler
+✅ Basic Compiler
 
- Standard Library Expansion
+**NEXT:**
 
- Package Manager
+👉 Standard Library Expansion
 
- Advanced Optimizations
+👉 Package Manager
+
+👉 Advanced Optimizations
 
 🤝 Contributing
 We’re building something revolutionary, and we’d love your input.
