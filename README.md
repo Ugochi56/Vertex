@@ -1,61 +1,98 @@
-# Vertex 🌀  
-A next-generation programming language built for speed, simplicity, and scalability.  
+# Vertex Language Documentation 🌀
 
-## 🚀 What is Vertex?  
-Vertex is a modern, lightweight, and expressive programming language designed to combine the **readability of Python**, the **performance of C++**, and the **safety of Rust**.  
+Welcome to **Vertex** — a simple, expressive, and powerful programming language designed to be the **next Python killer**.  
+Currently, Vertex runs on an interpreter and a Python transpiler, but will evolve into a full standalone compiler.
 
-Whether you’re building high-performance applications, experimenting with AI, or creating web services, Vertex aims to be the **developer’s go-to language of the future**.  
+---
 
-## ✨ Features  
-- **Simple Syntax** – clean and beginner-friendly.  
-- **Compiled for Speed** – no more slow runtime overhead.  
-- **Memory Safety** – inspired by Rust’s borrow checker concepts.  
-- **Cross-Platform** – works on Windows, Linux, and macOS.  
-- **Powerful Standard Library** – batteries included.  
-- **Modern Toolchain** – comes with its own package manager and build system.  
+## 🚀 Getting Started
 
-## 📦 Installation (coming soon)  
-for linux
-```bash
-# Clone the repo
-git clone https://github.com/Ugochi56/Vertex.git
-cd Vertex
+Compile to Python
+
+bash
+```
+python vertexc.py test/hello.vx -o out/hello.py
+python out/hello.py
+```
+**✨ Language Features**
+
+**1. Variables**
+Declare variables with let:
+
+**vertex**
+```
+let name: string = "Ugo"
+let year: int = 2025
+```
+let keyword is used for variable declaration.
+
+Types are optional but encouraged (string, int, etc.).
+
+**2. Printing**
+
+**vertex**
+```
+print "Hello, " + name
+print year
+```
+Use print to output values.
+
+Concatenate strings with +.
+
+**3. Arithmetic**
+
+**vertex**
+```
+let x: int = 10
+let y: int = 5
+
+print x + y       # 15
+print x * y       # 50
+print x - y       # 5
+print x / y       # 2
 ```
 
-for windows
-```cmd
-git clone https://github.com/Ugochi56/Vertex.git
-cd C:\User\Username\filelocation\Vertex
+**📝 Example Program**
+
+**vertex**
+```
+let name: string = "NAME"
+let year: int = 2025
+
+print "Hello, " + name
+print "It is currently " + year
+
+let x: int = 10
+let y: int = 5
+
+print "Sum: " + (x + y)
+print "Product: " + (x * y)
 ```
 
-🖥️ Hello World Example
+**Output**
 ```
-let name: string = "Vertex"
-print "Hello world, I am " + name
-```
-
-**To run a code**:
-```
-python vertexc.py test/hello.vx -o out/hello.py : for compilation
-python out/hello.py : run
+Hello, NAME
+It is currently 2025
+Sum: 15
+Product: 50
 ```
 
-🧪 Current Status
+**🔮 Roadmap (Planned Features)**
 
-✅ Lexer
+📝 Conditionals (if / else)
+📝 Loops (for, while)
+📝 Functions (fn greet(name: string))
+📝 Classes & Objects (OOP support)
+📝 Modules & Imports
+📝 Custom Types & Enums
+📝 Error Handling (try / catch)
+📝 Direct Bytecode Compilation (no Python dependency)
 
-✅ Parser
 
-✅ Basic Compiler
-
-**NEXT:**
-
-👉 Standard Library Expansion
-
-👉 Package Manager
-
-👉 Advanced Optimizations
-
-🤝 Contributing
-We’re building something revolutionary, and we’d love your input.
-Feel free to fork, open issues, or submit pull requests.
+**🤝 Contributing**
+```
+We welcome contributors!
+. Fork the repo
+. Create a branch (feature-x)
+. Submit a pull request 🚀
+```
