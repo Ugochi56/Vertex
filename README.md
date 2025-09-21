@@ -8,6 +8,7 @@ Currently, Vertex runs on an interpreter and a Python transpiler, but will evolv
 ## 🚀 Getting Started
 
 Clone first
+
 bash
 ```
 https://github.com/Ugochi56/Vertex.git
