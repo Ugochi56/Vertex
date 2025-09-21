@@ -80,10 +80,15 @@ Product: 50
 **🔮 Roadmap (Planned Features)**
 
 📝 Conditionals (if / else)
+
 📝 Loops (for, while)
+
 📝 Functions (fn greet(name: string))
+
 📝 Classes & Objects (OOP support)
+
 📝 Modules & Imports
+
 📝 Custom Types & Enums
 📝 Error Handling (try / catch)
 📝 Direct Bytecode Compilation (no Python dependency)
