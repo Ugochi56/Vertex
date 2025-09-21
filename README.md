@@ -14,6 +14,8 @@ bash
 https://github.com/Ugochi56/Vertex.git
 ```
 
+move to the directory where the file is saved
+
 Compile to Python
 
 bash
@@ -21,6 +23,7 @@ bash
 python vertexc.py test/hello.vx -o out/hello.py
 python out/hello.py
 ```
+
 **✨ Language Features**
 
 **1. Variables**
