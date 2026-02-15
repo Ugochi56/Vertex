@@ -1,0 +1,11 @@
+let i: int = 0
+let n: int = 5
+
+print "Counting up to " + n
+
+while i < n {
+    print "Count: " + i
+    i = i + 1
+}
+
+print "Done!"

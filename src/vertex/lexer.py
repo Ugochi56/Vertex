@@ -12,6 +12,7 @@ TOKEN_SPEC = [
     ('PRINT',    r'\bprint\b'),
     ('IF',       r'\bif\b'),
     ('ELSE',     r'\belse\b'),
+    ('WHILE',    r'\bwhile\b'),
     ('ID',       r'[A-Za-z_]\w*'),
     ('EQ',       r'=='),
     ('NEQ',      r'!='),

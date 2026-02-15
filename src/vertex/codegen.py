@@ -38,6 +38,9 @@ def codegen_stmt(stmt, indent=0) -> str:
         _, name, var_type, expr = stmt
         # we ignore var_type in this MVP; you can add runtime checks later
         return f"{indent_str}{name} = {codegen_expr(expr)}"
+    if t == 'assign':
+        _, name, expr = stmt
+        return f"{indent_str}{name} = {codegen_expr(expr)}"
     if t == 'print':
         _, expr = stmt
         return f"{indent_str}print({codegen_expr(expr)})"
@@ -54,6 +57,16 @@ def codegen_stmt(stmt, indent=0) -> str:
         if else_block:
             lines.append(f"{indent_str}else:")
             for s in else_block:
+                lines.append(codegen_stmt(s, indent + 1))
+        return "\n".join(lines)
+    if t == 'while':
+        _, cond, block = stmt
+        lines = []
+        lines.append(f"{indent_str}while {codegen_expr(cond)}:")
+        if not block:
+            lines.append(f"{indent_str}    pass")
+        else:
+            for s in block:
                 lines.append(codegen_stmt(s, indent + 1))
         return "\n".join(lines)
 

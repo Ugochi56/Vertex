@@ -47,8 +47,24 @@ class Parser:
             return self.parse_print()
         if self.at('IF'):
             return self.parse_if()
+        if self.at('WHILE'):
+            return self.parse_while()
+        if self.at('ID'):
+            return self.parse_assign()
         tok = self.cur()
         raise SyntaxError(f"Unexpected token {tok.type} ('{tok.value}') at pos {tok.pos}")
+
+    def parse_assign(self):
+        name = self.eat('ID').value
+        self.eat('ASSIGN')
+        expr = self.parse_expression()
+        return ('assign', name, expr)
+
+    def parse_while(self):
+        self.eat('WHILE')
+        cond = self.parse_expression()
+        block = self.parse_block()
+        return ('while', cond, block)
 
     def parse_if(self):
         self.eat('IF')
