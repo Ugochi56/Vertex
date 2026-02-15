@@ -1,0 +1,39 @@
+let x: int = 10
+let y: int = 5
+
+print "Testing Conditionals"
+
+if x > y {
+    print "x is greater than y"
+}
+
+if x < y {
+    print "x is less than y"
+} else {
+    print "x is not less than y"
+}
+
+if x == 10 {
+    print "x is 10"
+}
+
+if x != 10 {
+    print "x is not 10"
+} else if x == 10 {
+    print "x is 10 (else if)"
+}
+
+if x <= 10 {
+    print "x is <= 10"
+}
+
+if x >= 10 {
+    print "x is >= 10"
+}
+
+let z: int = 20
+if z > x {
+    if z > y {
+        print "z is biggest"
+    }
+}
