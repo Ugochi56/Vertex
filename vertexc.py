@@ -29,7 +29,17 @@ TOKEN_SPEC = [
     ('LET',      r'\blet\b'),
     ('CONST',    r'\bconst\b'),
     ('PRINT',    r'\bprint\b'),
+    ('IF',       r'\bif\b'),
+    ('ELSE',     r'\belse\b'),
     ('ID',       r'[A-Za-z_]\w*'),
+    ('EQ',       r'=='),
+    ('NEQ',      r'!='),
+    ('LTE',      r'<='),
+    ('GTE',      r'>='),
+    ('LT',       r'<'),
+    ('GT',       r'>'),
+    ('LBRACE',   r'\{'),
+    ('RBRACE',   r'\}'),
     ('ASSIGN',   r'='),
     ('COLON',    r':'),
     ('PLUS',     r'\+'),
@@ -126,8 +136,40 @@ class Parser:
             return self.parse_let()
         if self.at('PRINT'):
             return self.parse_print()
+        if self.at('IF'):
+            return self.parse_if()
         tok = self.cur()
         raise SyntaxError(f"Unexpected token {tok.type} ('{tok.value}') at pos {tok.pos}")
+
+    def parse_if(self):
+        self.eat('IF')
+        cond = self.parse_expression()
+        then_block = self.parse_block()
+        else_block = []
+        if self.at('ELSE'):
+            self.eat('ELSE')
+            if self.at('IF'):
+                # else if -> treat as a single statement block containing the if
+                else_block = [self.parse_if()]
+            else:
+                else_block = self.parse_block()
+        return ('if', cond, then_block, else_block)
+
+    def parse_block(self):
+        self.eat('LBRACE')
+        stmts = []
+        while not self.at('RBRACE') and not self.at('EOF'):
+            # skip optional NEWLINEs inside block
+            while self.at('NEWLINE'):
+                self.eat('NEWLINE')
+            if self.at('RBRACE'):
+                break
+            stmts.append(self.parse_statement())
+            # statement separator inside block
+            if self.at('NEWLINE'):
+                self.eat('NEWLINE')
+        self.eat('RBRACE')
+        return stmts
 
     def parse_let(self):
         self.eat('LET')
@@ -150,7 +192,17 @@ class Parser:
 
     # expression parsing with precedence
     def parse_expression(self):
-        return self.parse_addsub()
+        return self.parse_comparison()
+
+    def parse_comparison(self):
+        node = self.parse_addsub()
+        # comparison operators: == != < > <= >=
+        # we treat them as binary operators with lower precedence than + -
+        while self.cur().type in ('EQ', 'NEQ', 'LT', 'GT', 'LTE', 'GTE'):
+            op = self.eat('EQ', 'NEQ', 'LT', 'GT', 'LTE', 'GTE').type
+            right = self.parse_addsub()
+            node = ('binop', op, node, right)
+        return node
 
     def parse_addsub(self):
         node = self.parse_muldiv()
@@ -199,21 +251,6 @@ class Parser:
         raise SyntaxError(f"Unexpected token {tok.type} ('{tok.value}') at pos {tok.pos}")
 
 # -------------------------
-# Helper: detect whether an expression AST contains a string literal
-# (directly or nested inside binary ops). Used to decide when to coerce.
-# -------------------------
-def expr_contains_string(node) -> bool:
-    if not isinstance(node, tuple):
-        return False
-    t = node[0]
-    if t == 'string':
-        return True
-    if t == 'binop':
-        _, _op, left, right = node
-        return expr_contains_string(left) or expr_contains_string(right)
-    return False
-
-# -------------------------
 # Code generation (Vertex AST -> Python source)
 # -------------------------
 def codegen_expr(node) -> str:
@@ -230,48 +267,61 @@ def codegen_expr(node) -> str:
         return node[1]
     if t == 'binop':
         _, op, left, right = node
-        op_map = {'PLUS': '+', 'MINUS': '-', 'MULT': '*', 'DIV': '/'}
-        pyop = op_map.get(op, op)
 
-        # Special handling for '+' when concatenating strings:
-        # If either side contains a string literal (directly or nested),
-        # coerce the other side to str(...) to avoid Python TypeError.
+        # Use runtime helper for addition to handle string concatenation
         if op == 'PLUS':
-            left_is_stry = expr_contains_string(left)
-            right_is_stry = expr_contains_string(right)
-            left_code = codegen_expr(left)
-            right_code = codegen_expr(right)
+            return f"_v_add({codegen_expr(left)}, {codegen_expr(right)})"
 
-            if left_is_stry or right_is_stry:
-                # If left side is not string-producing, wrap with str(...)
-                if not left_is_stry:
-                    left_code = f"str({left_code})"
-                # If right side is not string-producing, wrap with str(...)
-                if not right_is_stry:
-                    right_code = f"str({right_code})"
-                return f"(({left_code}) + ({right_code}))"
-
-        # Default numeric / arithmetic behavior
+        op_map = {
+            'MINUS': '-', 'MULT': '*', 'DIV': '/',
+            'EQ': '==', 'NEQ': '!=', 'LT': '<', 'GT': '>', 'LTE': '<=', 'GTE': '>='
+        }
+        pyop = op_map.get(op, op)
         return f"({codegen_expr(left)} {pyop} {codegen_expr(right)})"
 
     raise RuntimeError(f"Unknown expr node: {node}")
 
-def codegen_stmt(stmt) -> str:
+def codegen_stmt(stmt, indent=0) -> str:
+    indent_str = "    " * indent
     t = stmt[0]
     if t == 'let':
         _, name, var_type, expr = stmt
         # we ignore var_type in this MVP; you can add runtime checks later
-        return f"{name} = {codegen_expr(expr)}"
+        return f"{indent_str}{name} = {codegen_expr(expr)}"
     if t == 'print':
         _, expr = stmt
-        return f"print({codegen_expr(expr)})"
+        return f"{indent_str}print({codegen_expr(expr)})"
+    if t == 'if':
+        _, cond, then_block, else_block = stmt
+        lines = []
+        lines.append(f"{indent_str}if {codegen_expr(cond)}:")
+        if not then_block:
+            lines.append(f"{indent_str}    pass")
+        else:
+            for s in then_block:
+                lines.append(codegen_stmt(s, indent + 1))
+
+        if else_block:
+            lines.append(f"{indent_str}else:")
+            for s in else_block:
+                lines.append(codegen_stmt(s, indent + 1))
+        return "\n".join(lines)
+
     raise RuntimeError(f"Unknown stmt node: {stmt}")
 
 def compile_to_python(ast: List[Any], module_name: str = None) -> str:
     lines = []
     lines.append("# Generated by vertexc.py - Vertex -> Python (MVP)")
     lines.append("import sys")
-    lines.append("") 
+    lines.append("")
+
+    # Runtime helper for dynamic string concatenation
+    lines.append("def _v_add(a, b):")
+    lines.append("    if isinstance(a, str) or isinstance(b, str):")
+    lines.append("        return str(a) + str(b)")
+    lines.append("    return a + b")
+    lines.append("")
+
     for s in ast:
         lines.append(codegen_stmt(s))
     lines.append("") 
