@@ -7,22 +7,38 @@ Currently, Vertex runs on an interpreter and a Python transpiler, but will evolv
 
 ## 🚀 Getting Started
 
-Clone first
+Clone the repository:
 
-bash
+```bash
+git clone https://github.com/Ugochi56/Vertex.git
+cd Vertex
 ```
-https://github.com/Ugochi56/Vertex.git
+
+### Installation
+
+Install the package in editable mode:
+
+```bash
+pip install -e .
 ```
 
-move to the directory where the file is saved
+### Compile to Python
 
-Compile to Python
+You can compile Vertex files using the `vertex` command (if installed) or by running the module directly.
 
-bash
-```
-python vertexc.py test/hello.vx -o out/hello.py
+**Using the installed command:**
+```bash
+vertex examples/hello.vx -o out/hello.py
 python out/hello.py
 ```
+
+**Using the module directly:**
+```bash
+python -m vertex examples/hello.vx -o out/hello.py
+python out/hello.py
+```
+
+---
 
 **✨ Language Features**
 

@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vertex-lang"
+version = "0.1.0"
+description = "A simple, expressive, and powerful programming language designed to be the next Python killer."
+readme = "README.md"
+requires-python = ">=3.6"
+license = {file = "LICENSE"}
+authors = [
+  {name = "Ugochukwu", email = "ugochi56@github.com"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+keywords = ["compiler", "vertex", "programming-language"]
+
+[project.urls]
+"Homepage" = "https://github.com/Ugochi56/Vertex"
+
+[project.scripts]
+vertex = "vertex.cli:entry_point"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["vertex"]
